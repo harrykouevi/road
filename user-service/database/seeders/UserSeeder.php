@@ -13,10 +13,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('report_types')->truncate();
+        DB::table('users')->truncate();
 
 
-        DB::table('report_types')->insert(array(
+        DB::table('users')->insert(array(
             0 =>
                 array(
                     'id' => 1,
