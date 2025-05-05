@@ -1,0 +1,6 @@
+[submodule "map-service"]
+	path = map-service
+	url = https://github.com/harrykouevi/mapservice
+[submodule "ors-service"]
+	path = ors-service
+	url = https://github.com/harrykouevi/Openrouteservice.

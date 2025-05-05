@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoadreportController;
+use App\Http\Controllers\RoadreportController_v2;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,11 @@ Route::get('/road-issues', [RoadreportController::class, 'getRepports']);
 Route::middleware(['microauth'])->group(function () {
   
     Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
+
+});
+
+Route::prefix('v2')->middleware(['microauth'])->group(function () {
+  
+    Route::resource('road-issues', RoadreportController_v2::class)->only([ 'index','show','store','update']);
 
 });
