@@ -7,7 +7,7 @@ if [ ! -f .env ]; then
 fi
 
 # Installation des dépendances PHP
-if [ -f composer.json ]; then
+if [ -f composer.json ] || [ ! -f vendor/autoload.php ];  then
   echo "📦 Installation des dépendances PHP..."
   composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
