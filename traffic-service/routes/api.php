@@ -22,15 +22,16 @@ Route::get('/', function(){
 });
 Route::get('/road-issue-types', [RoadreportController::class, 'getTypeOfRepport']);
 Route::get('/road-issues', [RoadreportController::class, 'getRepports']);
+Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
 
 Route::middleware(['microauth'])->group(function () {
   
-    Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
 
 });
 
-Route::prefix('v2')->middleware(['microauth'])->group(function () {
-  
+Route::prefix('v2')->group(function () {
+// Route::prefix('v2')->middleware(['microauth'])->group(function () {
     Route::resource('road-issues', RoadreportController_v2::class)->only([ 'index','show','store','update']);
+
 
 });

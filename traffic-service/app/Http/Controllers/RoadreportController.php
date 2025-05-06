@@ -91,10 +91,11 @@ class RoadreportController extends Controller
     public function store(Request $request) : JsonResponse
     {
         $user = $request->get('auth_user');
+        $user_id = $request->get('user_id');
         try{ 
             $this->validate($request, RoadReport::$rules);
             $input = $request->all();
-            $input['user_id'] = $user['id'] ;
+            $input['user_id'] = !is_null($user)? $user['id'] : $user_id;
             // Création dans la BDD locale
             $report = $this->roadreportRepository->create($input) ;
         
