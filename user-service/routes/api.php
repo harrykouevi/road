@@ -27,7 +27,6 @@ Route::get('/', function(){
 Route::post('/register', [AuthController::class, 'register']);
 
 // Route pour la connexion de l'utilisateur
-// Cette route prend l'email et le mot de passe de l'utilisateur, et renvoie un token si les identifiants sont valides
 Route::post('/login', [AuthController::class, 'login']);
 
 
@@ -39,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Route pour obtenir le profil de l'utilisateur connecté
     // Cette route est accessible uniquement si l'utilisateur est authentifié avec un token valide
+    Route::get('/all-users', [UserController::class, 'index']);
+
     Route::get('/profile', [UserController::class, 'profile']);
     
     // Route pour mettre à jour les informations du profil utilisateur

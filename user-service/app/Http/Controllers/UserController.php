@@ -2,23 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\UserRepository;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    
+     /**
+     * @var UserRepository
+     */
+    private UserRepository $userRepository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     // public function __construct(PartenerShipService $partenerShipService ,UserRepository $userRepository, UploadRepository $uploadRepository, RoleRepository $roleRepository, CustomFieldRepository $customFieldRepo)
-    public function __construct()
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct();
+        $this->userRepository = $userRepository ;
+
     }
     
+
+    public function index()
+    {
+        $users =$this->userRepository->all() ;
+        return $this->sendResponse(
+            $users
+        , 'Users retrieved successfully');
+    }
+
     public function updateProfile(Request $request)
     {
         $user = $request->user();
