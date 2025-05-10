@@ -97,7 +97,7 @@ class AuthController extends Controller
                 ], 'User retrieved successfully');
             }
         } catch (ValidationException $e) {
-            return $this->sendError(array_values($e->errors()),422);
+            return $this->sendError($e->errors(),422);
 
         }
     }

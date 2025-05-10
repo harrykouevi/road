@@ -29,7 +29,7 @@ class StoreIncidentRequest extends FormRequest
             'emplacement.latitude' => 'required|numeric',
             'emplacement.longitude' => 'required|numeric',
             'emplacement.adresse' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|string', // base64 image
         ];
     }
 

@@ -29,8 +29,7 @@ Route::middleware(['microauth'])->group(function () {
 
 });
 
-Route::prefix('v2')->group(function () {
-// Route::prefix('v2')->middleware(['microauth'])->group(function () {
+Route::prefix('v2')->middleware(['microauth'])->group(function () {
     Route::resource('road-issues', RoadreportController_v2::class)->only([ 'index','show','store','update']);
 
 

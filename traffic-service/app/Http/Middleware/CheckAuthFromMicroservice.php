@@ -21,10 +21,9 @@ class CheckAuthFromMicroservice
         if (!$token) {
             return response()->json(['message' => 'Token manquant'], 401);
         }
-
         // Appel du micro-service d'authentification
         $response = Http::withToken($token)->withHeaders(['Accept' => 'application/json']) 
-            ->get(env('MICRO_SERVICE_AUTH_URL') . '/api/check-token');
+            ->get('http://user-service' . '/api/check-token');
 
            
         if ($response->successful() && $response->json('authenticated') === true) {
