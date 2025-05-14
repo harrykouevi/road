@@ -28,7 +28,6 @@ Route::middleware(['microauth'])->group(function () {
     Route::get('/proxy-carte', function () {
         $response = Http::withToken(session('token'))
             ->get(env('MAP_SERVICE_URL').'/api/map-directions?start=48.857547,2.351376&end=48.866547,2.351376&alternatives=3');
-
         return response($response->body(), 200)
             ->header('Content-Type', 'text/html');
     })->name('proxy-carte') ;

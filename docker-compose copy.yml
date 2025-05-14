@@ -1,6 +1,7 @@
 version: '3.8'
 
-services:
+services: 
+
   db1:
     image: mysql:8.0
     environment:
@@ -8,25 +9,25 @@ services:
       MYSQL_ROOT_PASSWORD: h
     volumes:
       - user_service-db-data:/var/lib/mysql
-    restart: unless-stopped
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "mysql", "-uroot", "-ph", "-e", "SELECT 1"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
-      - shared-net
-
-  
+      - default
 
   user-service:
-    build: 
-      context: ./user-service
-      args:
-        - OPcache_ENABLED=1
+    build: ./user-service
     volumes:
+       # Code source SANS vendor
       - ./user-service:/var/www/laravel:cached
-      - vendor-user:/var/www/laravel/vendor
+      # Ignore vendor pour ne pas écraser celui installé dans l'image
+      - /var/www/laravel/vendor
+      # Si tu veux rendre persistants les fichiers de logs/cache
+      - user_service-storage:/var/www/laravel/storage
+      - user_service-bootstrap_cache:/var/www/laravel/bootstrap/cache
     ports:
       - "8001:80"
     depends_on:
@@ -37,17 +38,15 @@ services:
       DB_PORT: 3306
       DB_DATABASE: user_service_db
       DB_USERNAME: root
-      DB_PASSWORD: h
-      OPcache_ENABLE: 1
-    restart: unless-stopped
+      DB_PASSWORD: h # Met une vraie valeur si nécessaire
+    restart: on-failure
     networks:
-      - shared-net
+      - default
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/api"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
 
   db2:
     image: mysql:8.0
@@ -56,87 +55,72 @@ services:
       MYSQL_ROOT_PASSWORD: h
     volumes:
       - traffic_service-db-data:/var/lib/mysql
-    restart: unless-stopped
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "mysql", "-uroot", "-ph", "-e", "SELECT 1"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
-      - shared-net
+      - default
 
   traffic-service:
-    build: 
-      context: ./traffic-service
-      args:
-        - OPcache_ENABLED=1
+    build: ./traffic-service
     ports:
       - "8002:80"
-    volumes:
-      - ./traffic-service:/var/www/laravel:cached
-      - vendor-traffic:/var/www/laravel/vendor
     depends_on:
       db2:
         condition: service_healthy
-      user-service:
-        condition: service_healthy
+      # user-service:
+      #   condition: service_healthy
     environment:
       MICRO_SERVICE_AUTH_URL: http://user-service:80
       DB_HOST: db2
       DB_PORT: 3306
       DB_DATABASE: traffic_service_db
       DB_USERNAME: root
-      DB_PASSWORD: h
-      OPcache_ENABLE: 1
-    restart: unless-stopped
+      DB_PASSWORD: h # Met une vraie valeur si nécessaire
+    restart: on-failure
     networks:
-      - shared-net
+      - default
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/api"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+    volumes:
+      - ./traffic-service:/var/www/html
+
 
   trafficadmin-service:
-    build: 
-      context: ./trafficadmin
-      args:
-        - OPcache_ENABLED=1
+    build: ./trafficadmin
     ports:
       - "8000:80"
-    volumes:
-      - ./trafficadmin:/var/www/laravel:cached
-      - vendor-trafficadmin:/var/www/laravel/vendor
-    depends_on:
-      user-service:
-        condition: service_healthy
-      traffic-service:
-        condition: service_healthy
+    
     environment:
       MICRO_SERVICE_AUTH_URL: http://user-service:80
-      MAP_SERVICE_URL: http://mapservice:80
-      TRAFFIC_SERVICE_URL: http://traffic-service:80
-
-      OPcache_ENABLE: 1
-    restart: unless-stopped
+      MAP_SERVICE_URL: http://traffic-service:80
+      
+    restart: on-failure
     networks:
-      - shared-net
+      - default
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/login"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+    volumes:
+      - ./trafficadmin:/var/www/html
+    
 
 networks:
-  shared-net:
+  # trafine-net:
+  #   driver: bridge
+  default:
     external: true
     name: shared-net  
-
 volumes:
   user_service-db-data:
   traffic_service-db-data:
-  vendor-user:
-  vendor-traffic:
-  vendor-trafficadmin:
+  user_service-storage:
+  user_service-bootstrap_cache:
