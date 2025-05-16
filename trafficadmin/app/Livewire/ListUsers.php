@@ -13,20 +13,39 @@ class ListUsers extends Component
 
     public $search = ''; // Property for search functionality
 
+    public $users;
+
+    public $selectedUser = null;
+
+
+
+    public function selectUser($id)
+    {
+        $this->selectedUser = (new UserService())->get($id) ;
+  
+    }
+
+    public function mount()
+    {
+        $this->users = (new UserService())->getAll() ;
+    }
 
     public function render()
     {
-        //  $annonces = (new UserService())->search($this->search)->paginate(8) ;
-        $users = (new UserService())->getAll() ;
-        return view('livewire.list-users', [
-            'users' => $users,
-        ]);
+        return view('livewire.list-users');
     }
 
     
     public function updatingSearch()
     {
         $this->resetPage(); // Reset pagination when search query changes
+    }
+
+    public function delete($id)
+    {
+        $user = (new UserService())->get($id) ;
+        $user->delete(); // refresh
+        session()->flash('message', 'User '.$user->id.' deleted successfully.');
     }
 
 

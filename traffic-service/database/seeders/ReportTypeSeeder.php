@@ -18,9 +18,9 @@ class ReportTypeSeeder extends Seeder
 
         DB::table('report_types')->insert(array(
             0 =>
-                array(
+                array( 
                     'id' => 1,
-                    'name'  => 'type 1',
+                    'name'  => 'accident',
                     'color'  => null,
                     'description' => null,
                     'created_at' => now(),
@@ -29,7 +29,7 @@ class ReportTypeSeeder extends Seeder
 
                 array(
                     'id' => 2,
-                    'name'  => 'type 2',
+                    'name'  => 'embouteillage',
                     'color'  => null,
                     'description' => null,
                     'created_at' => now(),
@@ -38,7 +38,15 @@ class ReportTypeSeeder extends Seeder
 
                 array(
                     'id' => 3,
-                    'name'  => 'type 3',
+                    'name'  => 'route barrée',
+                    'color'  => null,
+                    'description' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ),
+                array(
+                    'id' => 4,
+                    'name'  => 'danger',
                     'color'  => null,
                     'description' => null,
                     'created_at' => now(),

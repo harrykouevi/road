@@ -49,4 +49,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route pour déconnecter l'utilisateur
     // Cela supprime le token actuel de l'utilisateur, mettant fin à sa session
     Route::post('/logout', [AuthController::class, 'logout']) ; // route de deconnexion d'un utilisateur;
+
+    Route::get('/users/{id}', [UserController::class, 'show']); // route permetant de recuperer utilisateur connecté grace au token
+     // Route pour mettre à jour les informations  utilisateur
+    // Cette route est également protégée par un token d'authentification
+    Route::put('/users/{id}', [UserController::class, 'update']); // route permettant la mis a jour des informations d'un utilisateur connecté
+    
+   
+
 }); //toutes les routes necessitant une authenthification
+

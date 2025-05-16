@@ -16,9 +16,9 @@ use App\Models\User;
  * Class UserRepository
  * @package App\Repositories
  *
- * @method Salon findWithoutFail($id, $columns = ['*'])
- * @method Salon find($id, $columns = ['*'])
- * @method Salon first($columns = ['*'])
+ * @method  findWithoutFail($id, $columns = ['*'])
+ * @method  find($id, $columns = ['*'])
+ * @method  first($columns = ['*'])
  */
 class UserRepository extends BaseRepository
 {

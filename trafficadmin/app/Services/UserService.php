@@ -85,19 +85,17 @@ class UserService
   
     public function get($id,Array $relations=[])
     {
-        return User::with('images')->findOrFail($id);
-        if(!empty($relations)){
-            foreach($relations as $relation){
-                if (!is_string($relation)) {
-                    throw new InvalidArgumentException('All elements in relations must be strings.');
-                }
-            }
-            $e = implode(", ", $relations) ;
-            return User::with($e)->findOrFail($id);
-        }else{
-            return User::findOrFail($id);
-        }
+        $params = [];
+        if (!empty($relation)) $params['with'] = implode(',', $relation);
 
+        $response = Http::withToken(session('token'))->withHeaders(['Accept' => 'application/json'])
+        ->get(env('MICRO_SERVICE_AUTH_URL') ."/api/users/{$id}", $params);
+
+        if ($response->successful()) {
+            $data = $response->json()['data'];
+            return collect($data);
+        }
+        throw new \Exception('Erreur lors de la récupération');
     }
 
     public function create(array $data)
@@ -122,9 +120,18 @@ class UserService
 
     public function update($id, array $data)
     {
-        $annonce = $this->get($id);
-        $annonce->update($data);
-        return $annonce;
+       
+
+        $response = Http::withToken(session('token'))
+            ->withHeaders(['Accept' => 'application/json'])
+            ->put(env('MICRO_SERVICE_AUTH_URL') . "/api/users/{$id}", $data);
+
+          
+        if ($response->successful()) {
+            $data = $response->json()['data'];
+            return collect($data);
+        }
+        throw new \Exception('Erreur lors de la mise à jour');
     }
 
     public function delete($id)

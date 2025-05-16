@@ -4,7 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\UserRepository;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Exceptions\RepositoryException;
+
+// use Illuminate\Validation\ValidationException;
+// use InfyOm\Generator\Criteria\LimitOffsetCriteria;
+// use Prettus\Validator\Exceptions\ValidatorException;
 
 class UserController extends Controller
 {
@@ -62,6 +71,66 @@ class UserController extends Controller
             'user' => $request->user()->only(['name', 'email', 'avatar_url']),
             'avatar_url' => $user->getFirstMediaUrl('avatars'),
         ], 'User retrieved successfully');
+    }
+
+    /**
+     * Display the specified Booking.
+     * GET|HEAD /bookings/{id}
+     *
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function show(int $id, Request $request): JsonResponse
+    {
+        try {
+            $this->userRepository->pushCriteria(new RequestCriteria($request));
+
+        } catch (RepositoryException $e) {
+            return $this->sendError($e->getMessage());
+        }
+        $user = $this->userRepository->findWithoutFail($id);
+        if (empty($user)) {
+            return $this->sendError('Booking not found');
+        }
+        return $this->sendResponse(collect($user), 'Booking retrieved successfully');
+    }
+
+
+
+    public function update($id, Request $request)
+    {
+        try {
+            $this->userRepository->pushCriteria(new RequestCriteria($request));
+        } catch (RepositoryException $e) {
+            return $this->sendError($e->getMessage());
+        }
+        $olduser = $this->userRepository->findWithoutFail($id);
+        if (empty($olduser)) {
+            return $this->sendError('user not found');
+        }
+       
+        try {
+            $rules = User::$rules ;
+            $rules['email'] = 'sometimes|email|unique:users,email,' . $id ;
+            $this->validate($request, $rules);
+            $input = $request->input() ;
+            Log::info('Requête envoyée au microservice', [
+                'url' => env('MICRO_SERVICE_AUTH_URL') . "/api/users/{$id}",
+                'data' =>  $input,
+                'token' => session('token'),
+            ]);
+            $user = $this->userRepository->update($input, $id);
+
+            return $this->sendResponse([
+                // 'user' => $request->user()->only(['name', 'email', 'avatar_url']),
+                'user' =>  $user,
+                'avatar_url' => $user->getFirstMediaUrl('avatars'),
+            ], 'User retrieved successfully');
+
+        } catch (ValidationException $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 
 

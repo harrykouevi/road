@@ -23,6 +23,15 @@ Route::middleware(['microauth'])->group(function () {
     })->name('dashboard');
 
     Route::get('/utilisateurs', [\App\Http\Controllers\UserController::class, 'index'])->name('getusers');
+    Route::get('/utilisateur/{id}/edit', [\App\Http\Controllers\UserController::class, 'show'])->name('users.edit');
+    Route::put('/utilisateur/{id}', [\App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+
+    Route::get('/incident-types', [\App\Http\Controllers\RoadIssueController::class, 'getissuetypes'])->name('getissuetypes');
+
+    Route::get('/incidents', [\App\Http\Controllers\RoadIssueController::class, 'index'])->name('roadissues.index');
+    Route::get('/incidents/{id}/edit', [\App\Http\Controllers\RoadIssueController::class, 'update'])->name('roadissues.edit');
+    Route::get('/incidents/ajouter-nouvelle-incident', [\App\Http\Controllers\RoadIssueController::class, 'create'])->name('roadissues.create');
+    Route::put('/incidents/{id}', [\App\Http\Controllers\RoadIssueController::class, 'update'])->name('roadissues.update');
 
 
     Route::get('/proxy-carte', function () {

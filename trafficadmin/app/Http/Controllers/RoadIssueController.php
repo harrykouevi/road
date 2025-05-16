@@ -12,4 +12,19 @@ class RoadIssueController extends Controller
     {
         return view('issuetypes.list'); 
     }
+
+    public function index()
+    {
+         return view('issues.list'); 
+    }
+
+    public function update($id)
+    {
+        return view('issues.edit', compact('id'));
+    }
+
+    public function create()
+    {
+        return view('issues.edit');
+    }
 }

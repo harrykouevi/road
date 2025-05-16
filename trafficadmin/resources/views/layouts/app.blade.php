@@ -71,7 +71,7 @@
                         <h6 class="collapse-header">Type d'incidents:</h6>
                         <a class="collapse-item" href="{{ route('getissuetypes') }}">Liste</a>
                          <h6 class="collapse-header">Incidents:</h6>
-                        <a class="collapse-item" href="{{ route('getusers') }}">Liste</a>
+                        <a class="collapse-item" href="{{ route('roadissues.index') }}">Liste</a>
                     </div>
                 </div>
             </li>

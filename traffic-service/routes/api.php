@@ -21,11 +21,11 @@ Route::get('/', function(){
     return  response()->json(['status' => 'ok' , 'service' => 'traffic' ]);
 });
 Route::get('/road-issue-types', [RoadreportController::class, 'getTypeOfRepport']);
-Route::get('/road-issues', [RoadreportController::class, 'getRepports']);
-Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
 
 Route::middleware(['microauth'])->group(function () {
   
+    Route::get('/road-issues', [RoadreportController::class, 'getRepports']);
+    Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
 
 });
 
