@@ -109,15 +109,8 @@
         <div class="col-lg-12 col-xl-12 col-md-12 mb-4">
 
             <!-- Illustrations -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Carte interactive</h6>
-                </div>
-                <div class="card-body">
-                    
-                    <iframe src="{{ route('proxy-carte') }}" width="100%" height="600" style="border: none;"></iframe>
-                </div>
-            </div>
+            @livewire('dashboard-map') <!-- Include the Livewire component -->
+
 
             
         </div>

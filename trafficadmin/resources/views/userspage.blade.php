@@ -119,7 +119,7 @@
                 </div>
                 <div class="card-body">
                     
-                    <iframe src="{{ route('proxy-carte') }}" width="100%" height="600" style="border: none;"></iframe>
+                    <iframe src="{{ route('map-directions') }}" width="100%" height="600" style="border: none;"></iframe>
                 </div>
             </div>
 

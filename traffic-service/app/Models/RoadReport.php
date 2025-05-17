@@ -16,6 +16,7 @@ class RoadReport extends Model  implements HasMedia
 {
     use HasFactory, InteractsWithMedia ;
 
+    protected $with = ['reporttype'];
 
     public $table = 'road_reports'; 
     /**
@@ -24,6 +25,7 @@ class RoadReport extends Model  implements HasMedia
      * @var list<string>
      */
     protected $fillable = [
+        'user',
         'description',
         'image', // max 2MB
         'latitude', 
@@ -53,18 +55,18 @@ class RoadReport extends Model  implements HasMedia
     ];
 
 
-    //    /**
-    //  * The attributes that should be casted to native types.
-    //  *
-    //  * @var array
-    //  */
-    // protected $casts = [
-    //     'image' => 'string',
-    //     'description'  => 'string',
-    //     'report_type' => ReportType::class, // Transformation en objet ReportType
-    //     'latitude' => 'double',
-    //     'longitude' => 'double',
-    // ];
+       /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user' => 'array',
+        // 'description'  => 'string',
+        'report_type' => ReportType::class, // Transformation en objet ReportType
+        // 'latitude' => 'double',
+        // 'longitude' => 'double',
+    ];
 
     /**
      * Add Media to api results
@@ -73,6 +75,11 @@ class RoadReport extends Model  implements HasMedia
     public function getHasMediaAttribute(): bool
     {
         return $this->hasMedia('image');
+    }
+
+    public function reporttype()
+    {
+        return $this->belongsTo(ReportType::class ,'report_type_id' , 'id' );
     }
 
     

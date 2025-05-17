@@ -85,15 +85,16 @@
             @if ($selectedIssue)
                 <div class="card shadow">
                     <div class="card-body">
-                        <p class="card-text"><strong>Auteur :</strong> {{ 'jean' }}</p>
+                        <p class="card-text"><strong>Auteur :</strong> {{ ($selectedIssue['user'] !== Null && array_key_exists('name',$selectedIssue['user'] )) ?$selectedIssue['user']['name'] : '____' }}</p>
                         <p class="card-text"><strong>Coordonnée :</strong> {{ $selectedIssue["latitude"] .'  -   '. $selectedIssue["longitude"]}}</p>
                         <p class="card-text"><strong>Description :</strong> {{ $selectedIssue["description"] }}</p>
+                        <p class="card-text"><strong>Type d'incident :</strong> {{ $selectedIssue['reporttype']['name']  }}</p>
                         <p class="card-text"><strong>Posté le :</strong> {{ $selectedIssue['created_at'] }}</p>
 
                         <div class="col-12 mb-4">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <iframe src="{{ route('proxy-carte') }}" width="100%" height="600" style="border: none;"></iframe>
+                                    <iframe src="{{ $iframeUrl }}" width="100%" height="600" style="border: none;"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -115,26 +116,30 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Description</th>
                                     <th>Coordonnée</th>
                                     <th>Type d'incident</th>
                                     <th>User ID</th>
                                     <th>Mis à jour</th>
+                                    <th>status</th>
                                     <th>Créé le</th>
-                                    <th>ID</th>
+                                    
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($roadissues as $roadissue)
                                 <tr>
+                                    <td>{{ $roadissue["id"] }}</td>
+
                                     <td>{{ $roadissue["description"] }}</td>
                                     <td>{{ $roadissue["latitude"] .' - '. $roadissue["longitude"] }}</td>
-                                    <td>{{ $roadissue["report_type_id"] }}</td>
+                                    <td>{{ $roadissue['reporttype']['name'] }}</td>
+                                    <td>{{ $roadissue["user_id"] }}</td>
                                     <td>{{ $roadissue["user_id"] }}</td>
                                     <td>{{ $roadissue["updated_at"] }}</td>
                                     <td>{{ $roadissue["created_at"] }}</td>
-                                    <td>{{ $roadissue["id"] }}</td>
                                     <td>
                                         <button wire:click="selectIssue({{ $roadissue['id'] }})" class="btn btn-sm btn-info">Voir</button>
                                         <a href="{{ route('roadissues.edit', $roadissue['id']) }}" class="btn btn-sm btn-primary">Modifier</a>

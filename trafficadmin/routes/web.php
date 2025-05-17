@@ -34,10 +34,28 @@ Route::middleware(['microauth'])->group(function () {
     Route::put('/incidents/{id}', [\App\Http\Controllers\RoadIssueController::class, 'update'])->name('roadissues.update');
 
 
-    Route::get('/proxy-carte', function () {
+    Route::get('/map-directions', function (Illuminate\Http\Request $request) {
         $response = Http::withToken(session('token'))
-            ->get(env('MAP_SERVICE_URL').'/api/map-directions?start=48.857547,2.351376&end=48.866547,2.351376&alternatives=3');
+            ->get(env('MAP_SERVICE_URL').'/api/map-directions?' . http_build_query([
+            'start' => $request->query('start', '48.857547,2.351376'),
+            'end' =>$request->query('end', '48.866547,2.351376'),
+            'alternative' => $request->query('alternative', 3)
+        ]));
         return response($response->body(), 200)
             ->header('Content-Type', 'text/html');
-    })->name('proxy-carte') ;
+    })->name('map-directions') ;
+
+    Route::get('/map-incidents', function (Illuminate\Http\Request $request) {
+
+
+        $url = env('MAP_SERVICE_URL') . '/api/map-with-issues-around?' . http_build_query([
+            'lat' => $request->query('lat'),
+            'lng' =>$request->query('lng'),
+            'radius' => $request->query('radius')
+        ]);
+
+        $response = Http::withToken(session('token'))->get( $url);
+        return response($response->body(), 200)
+            ->header('Content-Type', 'text/html');
+    })->name('map-incidents') ;
 });

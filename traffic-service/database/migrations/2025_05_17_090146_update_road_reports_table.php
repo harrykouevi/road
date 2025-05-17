@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        
         Schema::table('road_reports', function (Blueprint $table) {
-            $table->longText('user');
-            $table->unsignedBigInteger('user_id'); // ID de l'utilisateur
+            if (!Schema::hasColumn('road_reports', 'user')) {
+                $table->longText('user');
+            }
         });
     }
 
@@ -23,10 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('road_reports', function (Blueprint $table) {
-            // Drop the foreign key constraint in reverse migration
-            $table->dropColumn('user_id') ;
-            
-        });
+        //
     }
 };

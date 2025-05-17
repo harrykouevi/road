@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Builder ;
 use InvalidArgumentException;
 
-class RoadissueService
+class MapService
 {
     use ServiceTrait ;
     

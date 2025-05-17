@@ -11,8 +11,14 @@ class ListRoadIssues extends Component
 {
     use WithPagination; // Include the WithPagination trait
 
-    public $search = ''; // Property for search functionality
+    
     public $selectedIssue = null;
+    public $iframeUrl;
+    public $urlparams = [] ;
+    public ?string $endpoint = '';
+
+
+
     public $filterType = '';
     public $filterStatus = '';
     public $filteKkeyword = '';
@@ -28,7 +34,7 @@ class ListRoadIssues extends Component
     {
         // Au départ, pas de filtres appliqués
         $this->appliedFilters = [
-            
+            'per_page' => 20
         ];
     }
 
@@ -52,14 +58,27 @@ class ListRoadIssues extends Component
             if($this->filterLongitude != "") $this->appliedFilters['coordinate']['lng'] = $this->filterLongitude ;
             if($this->filterRadius != "") $this->appliedFilters['coordinate']['radius'] = $this->filterRadius ;
             if($this->filteKkeyword != "") $this->appliedFilters['keyword'] = $this->filteKkeyword  ;
+            
         }
-        
+        $this->appliedFilters['per_page'] = 20 ;
         $this->resetPage();
     }
 
     public function selectIssue($id)
     {
         $this->selectedIssue = (new RoadissueService())->get($id) ;
+        $this->urlparams = [
+               
+                'lat' => $this->selectedIssue["latitude"],
+                'lng' => $this->selectedIssue["longitude"],
+                'radius' => 1,
+        ];
+
+
+        $this->endpoint = route('map-incidents') ;
+
+        $this->updateIframeUrl() ;
+
     }
 
     public function updating($property)
@@ -80,11 +99,11 @@ class ListRoadIssues extends Component
     public function updated($field)
     {
         if (in_array($field, ['filterType', 'filterStatus', 'filterDate', 'filterLatitude', 'filterLongitude', 'filterRadius'])) {
-            $this->loadUsers();
+            $this->loadRoadIssues();
         }
     }
 
-    public function loadUsers()
+    public function loadRoadIssues()
     {
 
         $page = (new RoadissueService())->fetchRoadIssues($this->appliedFilters);
@@ -99,9 +118,15 @@ class ListRoadIssues extends Component
         );
     }
 
+    public function updateIframeUrl()
+    {
+        $params = http_build_query($this->urlparams);
+        $this->iframeUrl = $this->endpoint  . '?' . $params;
+    }
+
     public function render()
     {
-        $paginator = $this->loadUsers() ;
+        $paginator = $this->loadRoadIssues() ;
         return view('livewire.list-road-issues', [
             'roadissues' => $paginator,
         ]);

@@ -118,8 +118,9 @@ class RoadreportController extends Controller
            
             // dd('ggtt') ;
             //forcer la pagination avec  limite la taille max :
-            $perPage = min((int) $request->get('per_page', 10), 100);
-            if($request->has('per_page') || $perPage ){
+            
+            if($request->has('per_page') ){
+                $perPage = min((int) $request->get('per_page', 10), 100);
                 $roadrport = $this->roadreportRepository->paginate($perPage);
             }else{
                 $roadrport = $this->roadreportRepository->all();
@@ -172,6 +173,7 @@ class RoadreportController extends Controller
             $this->validate($request, RoadReport::$rules);
             $input = $request->all();
             $input['user_id'] = !is_null($user)? $user['id'] : $user_id;
+            $input['user'] = $user;
             // Création dans la BDD locale
             $report = $this->roadreportRepository->create($input) ;
         
