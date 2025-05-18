@@ -53,6 +53,12 @@ class RoadreportController extends Controller
         return $this->sendResponse($roadtypes->toArray(), 'ReportTypes retrieved successfully');
     }
 
+    public function stats(): JsonResponse
+    {
+        $last_issue = RoadReport::orderBy('created_at', 'desc')->first();
+        return $this->sendResponse(['total_issues' => RoadReport::count() , 'last_issue'=> $last_issue ], 'ReportTypes retrieved successfully');
+    }
+
     public function index(Request $request): JsonResponse
     {
         

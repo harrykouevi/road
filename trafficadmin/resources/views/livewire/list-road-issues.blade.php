@@ -121,10 +121,10 @@
                                     <th>Coordonnée</th>
                                     <th>Type d'incident</th>
                                     <th>User ID</th>
-                                    <th>Mis à jour</th>
+                                    
                                     <th>status</th>
                                     <th>Créé le</th>
-                                    
+                                    <th>Mise à jour</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

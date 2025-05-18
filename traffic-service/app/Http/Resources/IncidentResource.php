@@ -16,9 +16,10 @@ class IncidentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'nom' => $this->description,
             'id_type' => $this->report_type_id,
-            'report_type' => [
+            'reporttype' => [
                 'id' => $this->reporttype->id,
                 'name' => $this->reporttype->name,
                 'color'  =>  $this->reporttype->color,

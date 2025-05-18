@@ -107,11 +107,12 @@ class ListRoadIssues extends Component
     {
 
         $page = (new RoadissueService())->fetchRoadIssues($this->appliedFilters);
+        
         $collection = collect($page['data']);
 
         return new \Illuminate\Pagination\LengthAwarePaginator(
             $collection,
-            $page['total'] ?? $collection->count(),
+            $page['total'] ,
             $page['per_page'] ?? 10,
             $page['current_page'] ?? 1,
             ['path' => request()->url(), 'query' => request()->query()]

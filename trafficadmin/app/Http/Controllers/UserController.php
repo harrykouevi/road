@@ -6,7 +6,7 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class UserController extends Controller
+class UserController 
 {
     public function index()
     {

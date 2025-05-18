@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 
-class AuthController extends Controller
+class AuthController
 {
     public function index()
     {

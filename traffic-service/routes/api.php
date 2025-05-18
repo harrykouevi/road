@@ -21,9 +21,10 @@ Route::get('/', function(){
     return  response()->json(['status' => 'ok' , 'service' => 'traffic' ]);
 });
 Route::get('/road-issue-types', [RoadreportController::class, 'getTypeOfRepport']);
+Route::get('/stats', [RoadreportController::class, 'stats']);
 
 Route::middleware(['microauth'])->group(function () {
-  
+    
     Route::get('/road-issues', [RoadreportController::class, 'index']);
     Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'index']);
 

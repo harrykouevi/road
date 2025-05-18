@@ -20,10 +20,10 @@ class RoadissueService
       
         $response = Http::withToken(session('token'))->withHeaders(['Accept' => 'application/json'])
         ->get(env('TRAFFIC_SERVICE_URL') . '/api/road-issues', $filters);
-       
+        
        
         if ($response->successful()) {
-            $data = $response->json()['data'];
+            $data = $response->json();
             // dd($response->json() , $filters) ;
             return collect($data);
         }

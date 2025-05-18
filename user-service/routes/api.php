@@ -29,6 +29,8 @@ Route::post('/register', [AuthController::class, 'register']); //route d'inscrip
 // Route pour la connexion de l'utilisateur
 Route::post('/login', [AuthController::class, 'login']); //route d'authentification
 
+Route::get('/stats', [UserController::class, 'stats']);
+
 
 // Routes protégées nécessitant une authentification via token (auth:sanctum)
 Route::middleware('auth:sanctum')->group(function () {

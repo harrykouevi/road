@@ -36,6 +36,11 @@ class UserController extends Controller
     }
     
 
+    public function stats(): JsonResponse
+    {
+        return $this->sendResponse(['total_users' => User::count()], 'ReportTypes retrieved successfully');
+    }
+
     public function index()
     {
         $users =$this->userRepository->all() ;

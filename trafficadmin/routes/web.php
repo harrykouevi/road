@@ -18,9 +18,9 @@ Route::middleware(['microauth'])->group(function () {
   
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+  
+    Route::get('/', [\App\Http\Controllers\Controller::class, 'index'])->name('dashboard');
+
 
     Route::get('/utilisateurs', [\App\Http\Controllers\UserController::class, 'index'])->name('getusers');
     Route::get('/utilisateur/{id}/edit', [\App\Http\Controllers\UserController::class, 'show'])->name('users.edit');
