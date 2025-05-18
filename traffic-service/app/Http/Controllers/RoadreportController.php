@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Addresses\RoadreportCriteria;
+use App\Events\ImageProcessed;
 use App\Http\Repositories\RoadReportRepository;
 use App\Http\Repositories\RoadReportTypeRepository;
+use App\Http\Resources\RoadIssueCollection;
+use App\Http\Resources\RoadIssueResource;
 use App\Models\RoadReport ;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -61,72 +65,17 @@ class RoadreportController extends Controller
         try {
             
             // $this->roadreportRepository->pushCriteria(new RequestCriteria($request));>all()
-            $this->roadreportRepository->scopeQuery(function ($query) use ($request) {
-                
-                $query = (new $query())->newQuery() ;
-                $query->when($request->input('user_id'), fn($q) => $q->where('user_id', $request->input('user_id')));
-                $query->when($request->input('report_type_id'), fn($q) => $q->where('report_type_id', $request->input('report_type_id')));
-                // $query->when($request->input('status'), fn($q) => $q->where('status', $request->input('status')));
-                $query->when($request->input('date'), fn($q) => $q->whereBetween('created_at', [
-                    Carbon::parse($request->input('date'))->startOfDay(),
-                    Carbon::parse($request->input('date'))->endOfDay()
-                ]));
-                
-                if ($request->has('keyword')) {
-                     $query->where(function ($query) use ($request) {
-                        $query->where('description', 'like', '%' . $request->input('keyword') . '%') ;
-                            // ->orWhere('nom', 'like', '%' . $request->input('keyword') . '%');
-                    }) ;
-                }
+            $this->roadreportRepository->scopeQuery(RoadreportCriteria::applyQuery($request));
 
-
-                if ($request->filled('coordinate')) {
-                    //GET /api/road-report-types?coordinate[lat]=4.2233&coordinate[lng]=4.2233&coordinate[radius]=4
-              
-                    $coord = $request->input('coordinate') ;
-                    // Vérification de la présence et de la validité des 3 clés
-                    if( isset($coord['lat'], $coord['lng'], $coord['radius']) &&
-                        is_numeric($coord['lat']) &&
-                        is_numeric($coord['lng']) &&
-                        is_numeric($coord['radius'])
-                    ) {
-                        $lat = $coord['lat'];
-                        $lng = $coord['lng'];
-                        $radius = $coord['radius'];
-
-                        $haversine = "(6371 * acos(
-                            cos(radians($lat)) *
-                            cos(radians(latitude)) *
-                            cos(radians(longitude) - radians($lng)) +
-                            sin(radians($lat)) *
-                            sin(radians(latitude))
-                        ))";
-
-                        $query->selectRaw("*, $haversine AS distance")
-                        ->having("distance", "<=", $radius)
-                        ->orderBy("distance");
-                    }
-                }
-                
-                //Toujours finir par un tri indexé :
-                $query->orderBy('created_at', 'desc');
-                return $query;
-
-                //GET /api/road-report-types?type=incident&status=active&date=2025-05-10&keyword=panne&coordinate[lat]=4.2233&coordinate[lng]=4.2233&coordinate[radius]=4
-            });
-
-           
-            // dd('ggtt') ;
-            //forcer la pagination avec  limite la taille max :
-            
             if($request->has('per_page') ){
                 $perPage = min((int) $request->get('per_page', 10), 100);
                 $roadrport = $this->roadreportRepository->paginate($perPage);
+                // $roadrport = RoadIssueResource::collection($roadrport);
             }else{
                 $roadrport = $this->roadreportRepository->all();
             }
             
-            return $this->sendResponse(collect($roadrport), 'Report retrieved successfully'); 
+            return $this->sendResponse(RoadIssueResource::collection($roadrport), 'Report retrieved successfully'); 
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
@@ -149,11 +98,11 @@ class RoadreportController extends Controller
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-        $repport = $this->roadreportRepository->findWithoutFail($id);
-        if (is_null($repport)) {
+        $roadrport = $this->roadreportRepository->findWithoutFail($id);
+        if (is_null($roadrport)) {
             return $this->sendError('Repport not found');
         }
-        return $this->sendResponse($repport->toArray(), 'Repport retrieved successfully');
+        return $this->sendResponse(new RoadIssueResource($roadrport), 'Repport retrieved successfully');
 
     }
 
@@ -175,9 +124,13 @@ class RoadreportController extends Controller
             $input['user_id'] = !is_null($user)? $user['id'] : $user_id;
             $input['user'] = $user;
             // Création dans la BDD locale
-            $report = $this->roadreportRepository->create($input) ;
+            $roadrport = $this->roadreportRepository->create($input) ;
+
+            // Déclenchement en arrière-plan de l'enregistrement d'image
+            if(array_key_exists('image',$input) ) event(new ImageProcessed($input['image'],  $roadrport->id));
+            event(new ImageProcessed($input['image'],  $roadrport->id));
         
-            return $this->sendResponse($report->toArray(), 'Repport added successfully');
+            return $this->sendResponse(new RoadIssueResource($roadrport), 'Repport added successfully');
         } catch (ValidationException $e) {
             return $this->sendError(array_values($e->errors()),422);
         }
@@ -201,9 +154,11 @@ class RoadreportController extends Controller
         try {
             $this->validate($request, RoadReport::$rules);
             $input = $request->all();
-            $repport = $this->roadreportRepository->update($input, $id);
-            // event(new RepportChangedEvent($repport));
-            return $this->sendResponse($repport->toArray(), 'Repport updated successfully');
+            $roadrport = $this->roadreportRepository->update($input, $id);
+            // Déclenchement en arrière-plan de l'enregistrement d'image
+            if(array_key_exists('image',$input) ) event(new ImageProcessed($input['image'],  $roadrport->id));
+        
+            return $this->sendResponse(new RoadIssueResource($roadrport), 'Repport updated successfully');
            
         } catch (ValidationException $e) {
             return $this->sendError($e->getMessage());

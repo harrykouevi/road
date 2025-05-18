@@ -12,8 +12,9 @@ class RoadIssueResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request)
+    public function toArray(Request $request): array
     {
+        
         return [
             'id' => $this->id,
             'description' => $this->description,
@@ -26,8 +27,12 @@ class RoadIssueResource extends JsonResource
                 'color'  =>  $this->reporttype->color,
                 'description' => $this->reporttype->description,
             ],
+            'user' => $this->user,
+            'created_at' => $this->created_at->format('d/m/Y H:i:s'),
+            'updated_at' => $this->updated_at->format('d/m/Y H:i:s'),
             // Pas de besoin d'envoyer l'image en base64, tu peux envoyer une URL
-            'image' => url('storage/' . $this->image),
+            'image' => !is_null( $this->image_path) ? url('storage/' . $this->image_path) : Null,
+
         ];
     }
 }

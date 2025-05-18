@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Criteria\Addresses\RoadreportCriteria;
+use App\Events\ImageProcessed;
 use App\Http\Repositories\RoadReportRepository;
 use App\Http\Repositories\RoadReportTypeRepository;
 use App\Http\Requests\StoreIncidentRequest;
@@ -44,12 +46,20 @@ class RoadreportController_v2 extends Controller
     {
         try {
             $this->roadreportRepository->pushCriteria(new RequestCriteria($request));
+            $this->roadreportRepository->scopeQuery(RoadreportCriteria::applyQuery($request));
+            if($request->has('per_page') ){
+                $perPage = min((int) $request->get('per_page', 10), 100);
+                $roadrport = $this->roadreportRepository->paginate($perPage);
+                // $roadrport = RoadIssueResource::collection($roadrport);
+            }else{
+                $roadrport = $this->roadreportRepository->all();
+            }
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-        $roadtypes = $this->roadreportRepository->all();
-        $roadtypes =IncidentResource::collection($roadtypes);
-        return $this->sendResponse($roadtypes, 'Report retrieved successfully');
+        // $roadrport = $this->roadreportRepository->all();
+        $roadrport =IncidentResource::collection($roadrport);
+        return $this->sendResponse($roadrport, 'Report retrieved successfully');
     }
 
     /**
@@ -67,11 +77,11 @@ class RoadreportController_v2 extends Controller
         } catch (RepositoryException $e) {
             return $this->sendError($e->getMessage());
         }
-        $repport = $this->roadreportRepository->findWithoutFail($id);
-        if (is_null($repport)) {
+        $roadrport = $this->roadreportRepository->findWithoutFail($id);
+        if (is_null($roadrport)) {
             return $this->sendError('Repport not found');
         }
-        return $this->sendResponse(new IncidentResource($repport), 'Repport retrieved successfully');
+        return $this->sendResponse(new IncidentResource($roadrport), 'Repport retrieved successfully');
 
     }
 
@@ -85,7 +95,8 @@ class RoadreportController_v2 extends Controller
     public function store(StoreIncidentRequest $request) : JsonResponse
     {
         $user = $request->get('auth_user');
-
+        $user_id = $request->get('user_id');
+        
         $input = $request->all();
         // Stocker l'image
         // $imagePath = $request->file('image')->store('incidents', 'public');
@@ -97,13 +108,17 @@ class RoadreportController_v2 extends Controller
             'latitude' => $input['emplacement']['latitude'],
             'longitude' => $input['emplacement']['longitude'],
             'adresse' => $input['emplacement']['adresse'] ?? null,
-            'user_id' => $user['id'], // ou autre logique
+            'user' => $user,
+            'user_id' => !is_null($user)? $user['id'] : $user_id, // ou autre logique
             //  'image' => $imagePath,
         ];
         // Sauvegarde
-        $report = $this->roadreportRepository->create($in) ;
+        $roadrport = $this->roadreportRepository->create($in) ;
+        // Déclenchement en arrière-plan
+        if(array_key_exists('image',$input) ) event(new ImageProcessed($input['image'],  $roadrport->id));
+
     
-        return $this->sendResponse(new IncidentResource($report), 'Repport added successfully');
+        return $this->sendResponse(new IncidentResource($roadrport), 'Repport added successfully');
        
     }
 
@@ -134,9 +149,11 @@ class RoadreportController_v2 extends Controller
                
               //  'image' => $imagePath,
             ];
-            $report = $this->roadreportRepository->update($in, $id);
-            // event(new RepportChangedEvent($report));
-            return $this->sendResponse(new IncidentResource($report), 'Repport updated successfully');
+            $roadrport = $this->roadreportRepository->update($in, $id);
+            if(array_key_exists('image',$input) ) event(new ImageProcessed($input['image'],  $roadrport->id));
+
+            // event(new RepportChangedEvent($roadrport));
+            return $this->sendResponse(new IncidentResource($roadrport), 'Repport updated successfully');
            
         
     }

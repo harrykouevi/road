@@ -18,13 +18,22 @@ class IncidentResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->description,
             'id_type' => $this->report_type_id,
+            'report_type' => [
+                'id' => $this->reporttype->id,
+                'name' => $this->reporttype->name,
+                'color'  =>  $this->reporttype->color,
+                'description' => $this->reporttype->description,
+            ],
             'emplacement' => [
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'adresse' => $this->adresse ?? null, // Si tu as un champ "adresse"
             ],
+            'user' => $this->user,
+            'created_at' => $this->created_at->format('d/m/Y H:i:s'),
+            'updated_at' => $this->updated_at->format('d/m/Y H:i:s'),
             // Pas de besoin d'envoyer l'image en base64, tu peux envoyer une URL
-            'image' => url('storage/' . $this->image),
+            'image' => !is_null( $this->image_path) ? url('storage/' . $this->image_path) : Null,
         ];
     }
 }

@@ -38,6 +38,9 @@ php artisan migrate --force
 echo "🌱 Exécution des seeders..."
 php artisan db:seed --force
 
+echo "🌱 partage du dossier storage..."
+php artisan storage:link
+
 # Démarrage du serveur Apache
 echo "🚀 Lancement d'Apache..."
 # exec apache2-foreground

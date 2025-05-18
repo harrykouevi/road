@@ -24,13 +24,11 @@ Route::get('/road-issue-types', [RoadreportController::class, 'getTypeOfRepport'
 
 Route::middleware(['microauth'])->group(function () {
   
-    Route::get('/road-issues', [RoadreportController::class, 'getRepports']);
-    Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'getRepports']);
+    Route::get('/road-issues', [RoadreportController::class, 'index']);
+    Route::resource('road-issues', RoadreportController::class)->except([ 'getTypeOfRepport', 'index']);
 
 });
 
 Route::prefix('v2')->middleware(['microauth'])->group(function () {
     Route::resource('road-issues', RoadreportController_v2::class)->only([ 'index','show','store','update']);
-
-
 });

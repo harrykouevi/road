@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Pagination\LengthAwarePaginator ;
 
 class Controller extends BaseController
 {
@@ -41,6 +43,17 @@ class Controller extends BaseController
      */
     private static function makeResponse($message, $data)
     {
+        
+        if( $data instanceof AnonymousResourceCollection  ){
+            $resource = $data->resource ;
+            if( $resource instanceof LengthAwarePaginator ){
+            
+                return array_merge([
+                        'success' => true,
+                        'message' => $message,
+                    ] ,$resource->toArray()) ;
+            }
+        }
         return [
             'success' => true,
             'data'    => $data,
