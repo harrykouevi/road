@@ -145,6 +145,7 @@
                                         <a href="{{ route('roadissues.edit', $roadissue['id']) }}" class="btn btn-sm btn-primary">Modifier</a>
                                         <button wire:click="delete({{ $roadissue['id'] }})" class="btn btn-sm btn-danger"
                                                 onclick="return confirm('Vous ête sur?')">Supprimer</button>
+                                        <a href="{{ route('incident.validation', $incident->id) }}">Valider / Refuser</a>
                                     </td>
                                 </tr>
                                 @endforeach

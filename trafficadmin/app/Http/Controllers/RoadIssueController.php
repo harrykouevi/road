@@ -18,6 +18,11 @@ class RoadIssueController
          return view('issues.list'); 
     }
 
+    public function show($id)
+    {
+        return view('issues.edit', compact('id'));
+    }
+
     public function update($id)
     {
         return view('issues.edit', compact('id'));
