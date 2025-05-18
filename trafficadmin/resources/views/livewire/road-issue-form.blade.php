@@ -31,7 +31,8 @@
                         <!-- Description -->
                         <div class="col-md-12 mb-3">
                             <label for="addresse" class="form-label">Addresse</label>
-                            <textarea id="addresse" wire:model="addresse" class="form-control" rows="3" placeholder="Décrivez brièvement l'incident..."></textarea>
+                            <input type="text" id="addresse" wire:model="addresse" class="form-control" placeholder="Quel est le lieu...">
+
                         </div>
 
                         <!-- Description -->

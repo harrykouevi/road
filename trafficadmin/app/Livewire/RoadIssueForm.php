@@ -36,8 +36,7 @@ class RoadIssueForm extends Component
     public function save()
     {
         
-        
-
+        $this->resetErrorBag();
         try{ 
             $data = $this->validate([
                 'addresse' => 'required|string|max:255',
