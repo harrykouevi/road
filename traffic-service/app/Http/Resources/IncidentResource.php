@@ -28,7 +28,7 @@ class IncidentResource extends JsonResource
             'emplacement' => [
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
-                'adresse' => $this->adresse ?? null, // Si tu as un champ "adresse"
+                'adresse' => $this->addresse ?? null, // Si tu as un champ "adresse"
             ],
             'user' => $this->user,
             'created_at' => $this->created_at->format('d/m/Y H:i:s'),

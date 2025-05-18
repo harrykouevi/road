@@ -30,9 +30,9 @@ class Controller extends BaseController
      * @param int $code
      * @return JsonResponse
      */
-    public function sendError($error, int $code = 400): JsonResponse
+    public function sendError($error, int $code = 400 , string $message= "" ): JsonResponse
     {
-        return Response::json($this->makeError($error), $code);
+        return Response::json($this->makeError($message , $error), $code);
     }
 
      /**
@@ -67,16 +67,15 @@ class Controller extends BaseController
      *
      * @return array
      */
-    public static function makeError($message, array $data = [])
+    protected static function makeError($message, array $data = [])
     {
         $res = [
             'success' => false,
             'message' => $message,
+            'errors' => $data,
         ];
 
-        if (!empty($data)) {
-            $res['data'] = $data;
-        }
+       
 
         return $res;
     }

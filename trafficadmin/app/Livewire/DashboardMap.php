@@ -41,6 +41,16 @@ class DashboardMap extends Component
             //lat=6.1751&lng=1.2123&radius=1000
         } elseif ($this->mode === 'itineraire') {
             // Appliquer la recherche d'itinéraire
+            $this->urlparams = [
+               
+                'start' => $this->departureLatitude.','.$this->departureLongitude,
+                'end' => $this->arrivalLatitude.','.$this->arrivalLongitude,
+                'alternatives' => 3,
+            ];
+
+
+            $this->endpoint = route('map-directions') ;
+            //start=6.1725,1.2314&end=6.1865,1.2200&alternatives=3
         }
         $this->updateIframeUrl();
     }
@@ -54,6 +64,11 @@ class DashboardMap extends Component
             'lng' => $this->incidentLongitude = 2.339430,
             'radius' => $this->incidentRadius =1000,
         ];
+
+        $this->departureLatitude = 48.857547;
+        $this->departureLongitude = 2.351376;
+        $this->arrivalLatitude = 48.866547;
+        $this->arrivalLongitude = 2.351376;
 
         $this->updateIframeUrl();
     }

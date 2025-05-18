@@ -52,11 +52,19 @@ class RoadissueService
         $response = Http::withToken(session('token'))
             ->withHeaders(['Accept' => 'application/json'])
             ->post(env('TRAFFIC_SERVICE_URL') . "/api/road-issues", $data);
-        if ($response->successful()) {
-            $data = $response->json()['data'];
-            return collect($data);
-        }
-        throw new \Exception('Erreur lors de la creation');
+        return $response->json() ;
+      
+        // if ($response->successful()) {
+        //     $data = $response->json()['data'];
+        //     return collect($data);
+        // } elseif ($response->status() === 422) {
+        //     // Erreurs de validation Laravel
+        //     $errors = $response->json()['errors'] ?? [];
+        //     throw new \Exception('Erreur de validation : ' . json_encode($errors));
+        // } else {
+        //     // Autres erreurs
+        //     throw new \Exception('Erreur lors de la création : ' . $response->body());
+        // }
     }
 
     public function update($id, array $data)
@@ -66,11 +74,13 @@ class RoadissueService
             ->withHeaders(['Accept' => 'application/json'])
             ->put(env('TRAFFIC_SERVICE_URL') . "/api/road-issues/{$id}", $data);
 
-        if ($response->successful()) {
-            $data = $response->json()['data'];
-            return collect($data);
-        }
-        throw new \Exception('Erreur lors de la mise à jour');
+        return $response->json() ;
+        
+        // if ($response->successful()) {
+        //     $data = $response->json()['data'];
+        //     return collect($data);
+        // }
+        // throw new \Exception('Erreur lors de la mise à jour');
     }
 
     public function delete($id)

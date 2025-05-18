@@ -12,11 +12,28 @@
             </div>
 
             <div class="card-body">
+                @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <form wire:submit.prevent="save">
                     @csrf
                     @method('PUT')
-                
+                    @error('_mess_') 
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                    @error('general') 
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                     <div class="row">
+                        
+                        <!-- Description -->
+                        <div class="col-md-12 mb-3">
+                            <label for="addresse" class="form-label">Addresse</label>
+                            <textarea id="addresse" wire:model="addresse" class="form-control" rows="3" placeholder="Décrivez brièvement l'incident..."></textarea>
+                        </div>
+
                         <!-- Description -->
                         <div class="col-md-12 mb-3">
                             <label for="description" class="form-label">Description de l'incident</label>

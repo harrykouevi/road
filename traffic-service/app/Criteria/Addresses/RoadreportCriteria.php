@@ -62,8 +62,8 @@ class RoadreportCriteria implements CriteriaInterface
                 
                 if ($request->has('keyword')) {
                      $query->where(function ($query) use ($request) {
-                        $query->where('description', 'like', '%' . $request->input('keyword') . '%') ;
-                            // ->orWhere('nom', 'like', '%' . $request->input('keyword') . '%');
+                        $query->where('description', 'like', '%' . $request->input('keyword') . '%') 
+                            ->orWhere('addresse', 'like', '%' . $request->input('keyword') . '%');
                     }) ;
                 }
 

@@ -107,7 +107,7 @@
         
 
         <div class="col-lg-12 col-xl-12 col-md-12 mb-4">
-
+            
             <!-- Illustrations -->
             @livewire('dashboard-map') <!-- Include the Livewire component -->
 

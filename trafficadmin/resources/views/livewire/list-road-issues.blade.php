@@ -117,11 +117,11 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Description</th>
+                                    <th>Addresse</th>
                                     <th>Coordonnée</th>
+                                    <th>Description</th>
                                     <th>Type d'incident</th>
                                     <th>User ID</th>
-                                    
                                     <th>status</th>
                                     <th>Créé le</th>
                                     <th>Mise à jour</th>
@@ -132,9 +132,9 @@
                                 @foreach($roadissues as $roadissue)
                                 <tr>
                                     <td>{{ $roadissue["id"] }}</td>
-
-                                    <td>{{ $roadissue["description"] }}</td>
+                                    <td>{{ $roadissue["addresse"] }}</td>
                                     <td>{{ $roadissue["latitude"] .' - '. $roadissue["longitude"] }}</td>
+                                    <td>{{ $roadissue["description"] }}</td>
                                     <td>{{ $roadissue['reporttype']['name'] }}</td>
                                     <td>{{ $roadissue["user_id"] }}</td>
                                     <td>{{ $roadissue["user_id"] }}</td>

@@ -65,11 +65,8 @@ class RoadreportController extends Controller
         $request->validate([
             'keyword' => ['nullable', 'string', 'max:100']
         ]);
-        // DB::enableQueryLog();
 
-      
         try {
-            
             // $this->roadreportRepository->pushCriteria(new RequestCriteria($request));>all()
             $this->roadreportRepository->scopeQuery(RoadreportCriteria::applyQuery($request));
 
@@ -134,7 +131,6 @@ class RoadreportController extends Controller
 
             // Déclenchement en arrière-plan de l'enregistrement d'image
             if(array_key_exists('image',$input) ) event(new ImageProcessed($input['image'],  $roadrport->id));
-            event(new ImageProcessed($input['image'],  $roadrport->id));
         
             return $this->sendResponse(new RoadIssueResource($roadrport), 'Repport added successfully');
         } catch (ValidationException $e) {
@@ -167,7 +163,8 @@ class RoadreportController extends Controller
             return $this->sendResponse(new RoadIssueResource($roadrport), 'Repport updated successfully');
            
         } catch (ValidationException $e) {
-            return $this->sendError($e->getMessage());
+            return $this->sendError(array_values($e->errors()),422);
+
         }
     }
 

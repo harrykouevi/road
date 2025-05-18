@@ -18,6 +18,7 @@ class RoadIssueResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'addresse' => $this->addresse,
             'description' => $this->description,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,

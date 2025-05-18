@@ -137,15 +137,13 @@ class RoadreportController_v2 extends Controller
             return $this->sendError('Repport not found');
         }
        
-      
-          
             $input = $request->all();
             $in = [
                 'description' => $input['nom'],
                 'report_type_id' => $input['id_type'],
                 'latitude' => $input['emplacement']['latitude'],
                 'longitude' => $input['emplacement']['longitude'],
-                'adresse' => $input['emplacement']['adresse'] ?? null,
+                'addresse' => $input['emplacement']['adresse'] ?? null,
                
               //  'image' => $imagePath,
             ];

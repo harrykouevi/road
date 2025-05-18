@@ -11,6 +11,7 @@ class RoadIssueForm extends Component
     public $roadissue;
     public $roadissueId;
     public $description;
+    public $addresse;
     public $report_type_id;
     public $latitude ;
     public $longitude ;
@@ -23,6 +24,7 @@ class RoadIssueForm extends Component
             $this->roadissue = $roadissue = (new RoadissueService())->get($id) ;
             $this->roadissueId = $roadissue['id'];
             $this->description = $roadissue['description'];
+            $this->addresse = $roadissue['addresse'] ;
             $this->report_type_id = $roadissue['report_type_id'];
             $this->latitude = $roadissue['latitude'];
             $this->longitude = $roadissue['longitude'];
@@ -33,23 +35,43 @@ class RoadIssueForm extends Component
 
     public function save()
     {
-        $data = $this->validate([
-            'description' => 'required|string|max:255',
-            'report_type_id' => 'nullable',
-            'latitude' => 'nullable',
-            'longitude' => 'nullable',
-        ]);
+        
+        
 
+        try{ 
+            $data = $this->validate([
+                'addresse' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+                'report_type_id' => 'nullable',
+                'latitude' => 'nullable',
+                'longitude' => 'nullable',
+            ]);
 
-        if ($this->roadissueId) {
-            (new RoadissueService())->update($this->roadissueId,$data) ; 
-            session()->flash('message', 'Incident mise à jour.');
-        } else {
-             (new RoadissueService())->create($data) ; 
-            session()->flash('message', 'Incident créé.');
+            if ($this->roadissueId) {
+                $response = (new RoadissueService())->update($this->roadissueId,$data) ; 
+            } else {
+                $response = (new RoadissueService())->create($data) ; 
+            }
+
+            if ($response['success']== true) {
+
+                session()->flash('message', 'Problème signalé avec succès.');
+                return redirect()->route('roadissues.index');
+
+            } elseif ($response['success']== false) {
+    
+                $err = $response['errors'];
+                foreach ($err as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->addError('_mess_', $message);
+                    }
+                }
+                session()->flash('message', 'Probleme survenu.');
+            } 
+        }catch (\Exception $e) {
+            $this->addError('general', 'Erreur : ' . $e->getMessage());
         }
-
-        return redirect()->route('roadissues.index');
+            
     }
 
     

@@ -27,6 +27,7 @@ class RoadReport extends Model  implements HasMedia
      */
     protected $fillable = [
         'user',
+        'addresse',
         'description',
         'image_path', // max 2MB
         'latitude', 
@@ -41,6 +42,7 @@ class RoadReport extends Model  implements HasMedia
      * @var array
      */
     public static array $rules =[
+        'addresse' => 'required|string|max:200',
         'description' => 'sometimes|string|max:255',
         'report_type_id' => 'required|exists:report_types,id',
         'image' => 'sometimes|string', // Base64
@@ -50,6 +52,7 @@ class RoadReport extends Model  implements HasMedia
 
 
     protected $fieldSearchable = [
+        'addresse',
         'description',
         'latitude',
         'longitude',
