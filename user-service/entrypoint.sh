@@ -17,10 +17,12 @@ done
 # Hash actuels
 COMPOSER_HASH_FILE="/var/www/laravel/.composer.hash"
 CURRENT_HASH=$(md5sum composer.lock composer.json | md5sum | awk '{ print $1 }')
+# Fichier autoload à vérifier
+AUTOLOAD_FILE="/var/www/laravel/vendor/autoload.php"
 
-# Si fichier de hash absent ou hash différent => composer install
-if [ ! -f "$COMPOSER_HASH_FILE" ] || [ "$(cat $COMPOSER_HASH_FILE)" != "$CURRENT_HASH" ]; then
-  echo "📦 Changements détectés dans composer.json ou composer.lock — Installation des dépendances..."
+# Si hash différent OU fichier de hash absent OU vendor/autoload absent => composer install
+if [ ! -f "$COMPOSER_HASH_FILE" ] || [ "$(cat $COMPOSER_HASH_FILE)" != "$CURRENT_HASH" ] || [ ! -f "$AUTOLOAD_FILE" ]; then
+  echo "📦 Changements détectés ou vendor/autoload.php manquant — Installation des dépendances..."
   composer install --no-interaction --prefer-dist --optimize-autoloader
 
   # Mise à jour du fichier de hash

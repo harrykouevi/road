@@ -88,7 +88,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Derniers incidents</div>
-                            <div class="mb-0 font-weight-bold text-gray-800">{{ $last_issue["addresse"] }}</div>
+                            <div class="mb-0 font-weight-bold text-gray-800">{{ !is_null($last_issue)? $last_issue["addresse"] : "__________" }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-comments fa-2x text-gray-300"></i>

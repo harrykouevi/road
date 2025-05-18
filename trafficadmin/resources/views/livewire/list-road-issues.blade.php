@@ -86,6 +86,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <p class="card-text"><strong>Auteur :</strong> {{ ($selectedIssue['user'] !== Null && array_key_exists('name',$selectedIssue['user'] )) ?$selectedIssue['user']['name'] : '____' }}</p>
+                        <p class="card-text"><strong>Adresse :</strong> {{ $selectedIssue["addresse"]}}</p>
                         <p class="card-text"><strong>Coordonnée :</strong> {{ $selectedIssue["latitude"] .'  -   '. $selectedIssue["longitude"]}}</p>
                         <p class="card-text"><strong>Description :</strong> {{ $selectedIssue["description"] }}</p>
                         <p class="card-text"><strong>Type d'incident :</strong> {{ $selectedIssue['reporttype']['name']  }}</p>
@@ -145,7 +146,7 @@
                                         <a href="{{ route('roadissues.edit', $roadissue['id']) }}" class="btn btn-sm btn-primary">Modifier</a>
                                         <button wire:click="delete({{ $roadissue['id'] }})" class="btn btn-sm btn-danger"
                                                 onclick="return confirm('Vous ête sur?')">Supprimer</button>
-                                        <a href="{{ route('incident.validation', $incident->id) }}">Valider / Refuser</a>
+                                        <a class="btn btn-sm btn-warning" href="{{ route('incident.validation', $roadissue['id']) }}" style="color:black !important">Valider / Refuser</a>
                                     </td>
                                 </tr>
                                 @endforeach
