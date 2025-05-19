@@ -107,7 +107,7 @@ class RoadreportController_v2 extends Controller
             'report_type_id' => $input['id_type'],
             'latitude' => $input['emplacement']['latitude'],
             'longitude' => $input['emplacement']['longitude'],
-            'adresse' => $input['emplacement']['adresse'] ?? null,
+            'addresse' => $input['emplacement']['adresse'] ?? null,
             'user' => $user,
             'user_id' => !is_null($user)? $user['id'] : $user_id, // ou autre logique
             //  'image' => $imagePath,

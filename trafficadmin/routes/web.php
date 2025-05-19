@@ -32,7 +32,7 @@ Route::middleware(['microauth'])->group(function () {
     Route::get('/incidents/{id}/edit', [\App\Http\Controllers\RoadIssueController::class, 'update'])->name('roadissues.edit');
     Route::get('/incidents/ajouter-nouvelle-incident', [\App\Http\Controllers\RoadIssueController::class, 'create'])->name('roadissues.create');
     Route::put('/incidents/{id}', [\App\Http\Controllers\RoadIssueController::class, 'update'])->name('roadissues.update');
-    Route::get('/incidents/{id}/validate', [\App\Http\Controllers\RoadIssueController::class, 'show'])->name('incident.validation');
+    Route::get('/incidents/{id}/validate', [\App\Http\Controllers\RoadIssueController::class, 'manage'])->name('incident.validation');
 
     Route::get('/map-directions', function (Illuminate\Http\Request $request) {
         $response = Http::withToken(session('token'))

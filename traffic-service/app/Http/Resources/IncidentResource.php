@@ -33,6 +33,8 @@ class IncidentResource extends JsonResource
             'user' => $this->user,
             'created_at' => $this->created_at->format('d/m/Y H:i:s'),
             'updated_at' => $this->updated_at->format('d/m/Y H:i:s'),
+            'validated_at' => !is_null($this->validated_at)? $this->validated_at : Null,
+
             // Pas de besoin d'envoyer l'image en base64, tu peux envoyer une URL
             'image' => !is_null( $this->image_path) ? url('storage/' . $this->image_path) : Null,
         ];

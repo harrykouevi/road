@@ -154,7 +154,7 @@ class RoadreportController extends Controller
         }
        
         try {
-            $this->validate($request, RoadReport::$rules);
+            $this->validate($request, RoadReport::$updaterules);
             $input = $request->all();
             $roadrport = $this->roadreportRepository->update($input, $id);
             // Déclenchement en arrière-plan de l'enregistrement d'image

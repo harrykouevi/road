@@ -33,7 +33,10 @@ class RoadReport extends Model  implements HasMedia
         'latitude', 
         'longitude',
         'report_type_id',
-        'user_id'
+        'user_id',
+        'validated_at',
+        'comment',
+        'status'
     ];
 
     /**
@@ -50,6 +53,20 @@ class RoadReport extends Model  implements HasMedia
         'longitude' => 'required|numeric|min:-200|max:200',
     ];
 
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static array $updaterules =[
+        'addresse' => 'sometimes|string|max:200',
+        'description' => 'sometimes|string|max:255',
+        'report_type_id' => 'sometimes|exists:report_types,id',
+        'image' => 'sometimes|string', // Base64
+        'latitude' => 'sometimes|numeric|min:-200|max:200',
+        'longitude' => 'sometimes|numeric|min:-200|max:200',
+    ];
+
 
     protected $fieldSearchable = [
         'addresse',
@@ -59,7 +76,7 @@ class RoadReport extends Model  implements HasMedia
     ];
 
 
-       /**
+    /**
      * The attributes that should be casted to native types.
      *
      * @var array
@@ -68,16 +85,6 @@ class RoadReport extends Model  implements HasMedia
         'user' => 'array',
         'report_type' => ReportType::class, // Transformation en objet ReportType
     ];
-
-    // public function getCreatedAtAttribute($value)
-    // {
-    //     return Carbon::parse($value)->format('d/m/Y H:i:s');
-    // }
-
-    // public function getUpdatedAtAttribute($value)
-    // {
-    //     return Carbon::parse($value)->format('d/m/Y H:i:s');
-    // }
 
     public function getUserAttribute($value)
     {

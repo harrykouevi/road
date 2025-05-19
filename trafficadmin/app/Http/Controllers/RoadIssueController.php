@@ -18,9 +18,9 @@ class RoadIssueController
          return view('issues.list'); 
     }
 
-    public function show($id)
+    public function manage($id)
     {
-        return view('issues.edit', compact('id'));
+        return view('issues.manage', compact('id'));
     }
 
     public function update($id)
