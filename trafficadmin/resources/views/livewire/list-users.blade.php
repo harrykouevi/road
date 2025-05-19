@@ -16,7 +16,7 @@
                     <!-- Boutons d'action -->
                     <a href="{{ route('users.edit', $selectedUser['id']) }}" class="btn btn-sm btn-primary mt-2">Modifier</a>
                     @if ( $selectedUser['id'] > 1)
-                        <button wire:click="delete({{ $selectedUser['id'] }})" class="btn btn-sm btn-danger"
+                        <button  class="btn btn-sm btn-danger"
                             onclick="return confirm('Vous ête sur?')">Supprimer</button>
                 
                     @endif
@@ -55,7 +55,8 @@
                                     <a href="{{ route('users.edit', $user['id']) }}" class="btn btn-sm btn-primary">Modifier</a>
 
                                     @if ( $user['id'] > 1)
-                                        <button wire:click="delete({{ $user['id'] }})" class="btn btn-sm btn-danger"
+                                    {{-- wire:click="delete({{ $user['id'] }})" --}}
+                                        <button  class="btn btn-sm btn-danger"
                                             onclick="return confirm('Vous ête sur?')">Supprimer</button>
                                     @else
                                         <button class="btn btn-secondary btn-sm" disabled>Protegé</button>

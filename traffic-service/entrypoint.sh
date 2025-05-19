@@ -40,8 +40,13 @@ php artisan migrate --force
 echo "🌱 Exécution des seeders..."
 php artisan db:seed --force
 
-echo "🌱 partage du dossier storage..."
-php artisan storage:link
+# Création du lien symbolique vers storage, si absent
+if [ ! -L public/storage ]; then
+  echo "🌱 Lien symbolique vers le dossier storage manquant — Création en cours..."
+  php artisan storage:link
+else
+  echo "✅ Lien symbolique vers storage déjà présent — Pas de création nécessaire"
+fi
 
 # Démarrage du serveur Apache
 echo "🚀 Lancement d'Apache..."

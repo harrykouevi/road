@@ -101,7 +101,7 @@
                         </div>
 
                         <a href="{{ route('roadissues.edit', $selectedIssue['id']) }}" class="btn btn-sm btn-primary mt-2">Modifier</a>
-                        <button wire:click="delete({{ $selectedIssue['id'] }})" class="btn btn-sm btn-danger mt-2"
+                        <button  class="btn btn-sm btn-danger mt-2"
                                 onclick="return confirm('Vous ête sur?')">Supprimer</button>
                     </div>
                 </div>
@@ -144,7 +144,8 @@
                                     <td>
                                         <button wire:click="selectIssue({{ $roadissue['id'] }})" class="btn btn-sm btn-info">Voir</button>
                                         <a href="{{ route('roadissues.edit', $roadissue['id']) }}" class="btn btn-sm btn-primary">Modifier</a>
-                                        <button wire:click="delete({{ $roadissue['id'] }})" class="btn btn-sm btn-danger"
+                                        {{-- wire:click="delete({{ $roadissue['id'] }})" --}}
+                                        <button  class="btn btn-sm btn-danger"
                                                 onclick="return confirm('Vous ête sur?')">Supprimer</button>
                                         @if( $roadissue['validated_at'] == Null )
                                         <a class="btn btn-sm btn-warning" href="{{ route('incident.validation', $roadissue['id']) }}" style="color:black !important">Valider / Refuser</a>
